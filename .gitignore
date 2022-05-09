@@ -1,0 +1,6 @@
+**/*.py[co]
+
+.jekyll-cache/
+*.egg-info/
+build/
+dist/
