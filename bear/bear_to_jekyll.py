@@ -32,16 +32,6 @@ import bear
 import sys
 
 
-def title_to_filename(path, title):
-    """
-    We build a simple filename from the title - i.e. "These Cats" becomes "these_cats.md". We do
-    not check for existence, as we may be doing an overwrite deliberately.
-    """
-
-    name = re.sub(r'\s','-',title.lower())
-    return os.path.join(path, name)
-
-
 def main():
     parser = argparse.ArgumentParser(description = 'Export Bear posts as Jekyll-compatible markdown')
     parser.add_argument('output', type = str,
@@ -77,11 +67,14 @@ def main():
     for note in notes:
         # crate title 
         title = note.created.strftime('%Y-%m-%d-') + note.title
+        # remove unix forbidden characters
+        file_title = re.sub(r'[<>:"/\\|?*]', '', title)
+        file_title = re.sub(r'\s','-', file_title.lower())
 
         # Create a suitable filename
         note_dir = os.path.join(full_path, "_posts")
-        imgdir = "images/" + re.sub(r'\s','-',title.lower())
-        filename = title_to_filename(note_dir, title) + '.md'
+        imgdir = "_images/" + file_title
+        filename = os.path.join(note_dir, file_title) + '.md'
 
         #TODO: check file updated
 
